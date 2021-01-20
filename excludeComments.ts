@@ -26,16 +26,18 @@ const BATCH_NUMBER = Number(process.env.BATCH_NUMBER)
 
 const instagramUrl = 'https://www.instagram.com/'
 const profile = 'https://www.instagram.com/pablo_muro'
-const promoUrl = 'https://www.instagram.com/p/CKM9F4Zr2gP/'
 
 const remainingFriends: any = JSON.parse(fs.readFileSync(remainingFriendsFilePath).toString())
 const cookiesString = fs.readFileSync(cookiesFilePath).toString().replace("\n", '');
+
+
+const foto = 'https://www.instagram.com/p/CIdWqySnNmI/'
 
 try {
   (async () => {
     const browser = await getBrowser(isHeadlessBrowser)
     const page = await browser.newPage();
-    await page.setViewport({ width: 1366, height: 800 });
+    // await page.setViewport({ width: 1366, height: 800 });
 
     const parsedCookies = cookiesString ? JSON.parse(cookiesString) : '';
     if (parsedCookies.length !== 0) {
@@ -54,31 +56,33 @@ try {
       await _fs.writeFile(cookiesFilePath, JSON.stringify(cookiesObject))
     }
 
-    await page.goto(promoUrl, { waitUntil: 'load', timeout: 30000 });
+    await page.goto(foto, { waitUntil: 'load', timeout: 30000 });
     console.log('Prom page')
 
+    const plusButtonEl = 'article div div ul button'
     try {
-      let batchNumber = 0;
-      while (remainingFriends.length) {
-        if (batchNumber == BATCH_NUMBER) {
-          const timeOut = getBatchPostsTimeout();
-          console.log(`Long pause for: ${(timeOut / 60000)} minutes`)
-          await _fs.writeFile(remainingFriendsFilePath, JSON.stringify(remainingFriends))
-          await page.waitForTimeout(timeOut)
+      let plusButton = await page.$(plusButtonEl);
+      while (plusButton) {
+
+        await page.waitForTimeout(500)
+        const listOfUl = await page.$$('article div ul ul');
+        if (listOfUl) {
+          const dots = await listOfUl[0].$('button[type="button"]')
+          dots?.evaluate(el => el.click())
+          await page.waitForTimeout(500)
+          let exclude = await page.$('div[role="dialog"] div button:nth-of-type(2)')
+          while (exclude) {
+            await page.waitForTimeout(200)
+            await exclude.click()
+            await page.waitForTimeout(200)
+            exclude = await page.$('div[role="dialog"] div button:nth-of-type(2)')
+          }
+
         }
-        const friend1 = remainingFriends.pop()
-        const friend2 = remainingFriends.pop()
-        await page.type('article form textarea', `@${friend1.profile} @${friend2.profile}`);
-        await page.click('article form button[type=submit]');
-
-        console.log('Remain: ', remainingFriends.length)
-        console.log(`post with:  @${friend1.profile} @${friend2.profile}\n`)
-
-        batchNumber++
-
-        await _fs.writeFile(remainingFriendsFilePath, JSON.stringify(remainingFriends))
-        await page.waitForTimeout(getBetweenPostsTimeout())
+        await page.click(plusButtonEl);
+        plusButton = await page.$(plusButtonEl);
       }
+      await browser.close()
     } catch (error) {
       console.log(error)
 
