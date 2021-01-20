@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "nodemon --inspect --exec babel-node --extensions '.ts' index.ts",
-    "test": "babel -h"
+    "start": "babel-node --extensions '.ts' index.ts",
+    "dev": "nodemon --inspect --exec babel-node --extensions '.ts' index.ts"
   },
   "dependencies": {
     "@babel/core": "^7.12.10",

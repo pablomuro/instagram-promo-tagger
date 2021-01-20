@@ -54,19 +54,28 @@ try {
       await _fs.writeFile(cookiesFilePath, JSON.stringify(cookiesObject))
     }
 
+    await page.goto(promoUrl, { waitUntil: 'load', timeout: 30000 });
 
     try {
       let batchNumber = 0;
       while (remainingFriends.length) {
         if (batchNumber == BATCH_NUMBER) {
+          const timeOut = getBatchPostsTimeout();
+          console.log('Long pause for: ', (timeOut / 60000))
           await _fs.writeFile(remainingFriendsFilePath, JSON.stringify(remainingFriends))
-          await page.waitForTimeout(getBatchPostsTimeout())
+          await page.waitForTimeout(timeOut)
         }
         const friend1 = remainingFriends.pop()
         const friend2 = remainingFriends.pop()
-        await page.type('article form textarea', `@${friend1} @${friend2}`);
+        await page.type('article form textarea', `@${friend1.profile} @${friend2.profile}`);
         await page.click('article form button[type=submit]');
+
+        console.log('Remain: ', remainingFriends.length)
+        console.log(`@${friend1.profile} @${friend2.profile}\n`)
+
         batchNumber++
+
+        await _fs.writeFile(remainingFriendsFilePath, JSON.stringify(remainingFriends))
         await page.waitForTimeout(getBetweenPostsTimeout())
       }
     } catch (error) {
