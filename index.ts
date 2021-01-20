@@ -55,13 +55,14 @@ try {
     }
 
     await page.goto(promoUrl, { waitUntil: 'load', timeout: 30000 });
+    console.log('Prom page')
 
     try {
       let batchNumber = 0;
       while (remainingFriends.length) {
         if (batchNumber == BATCH_NUMBER) {
           const timeOut = getBatchPostsTimeout();
-          console.log('Long pause for: ', (timeOut / 60000))
+          console.log(`Long pause for: ${(timeOut / 60000)} minutes`)
           await _fs.writeFile(remainingFriendsFilePath, JSON.stringify(remainingFriends))
           await page.waitForTimeout(timeOut)
         }
@@ -71,7 +72,7 @@ try {
         await page.click('article form button[type=submit]');
 
         console.log('Remain: ', remainingFriends.length)
-        console.log(`@${friend1.profile} @${friend2.profile}\n`)
+        console.log(`post with:  @${friend1.profile} @${friend2.profile}\n`)
 
         batchNumber++
 
