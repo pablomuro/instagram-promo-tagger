@@ -1,4 +1,4 @@
 node_modules/
 .env
 stuff.txt
-json_files/*
+json_files/*.json
