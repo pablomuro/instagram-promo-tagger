@@ -1,1 +1,1 @@
-# Instagram Promo Friends Tag
+# Instagram Promo Tagger
