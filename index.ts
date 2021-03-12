@@ -10,6 +10,10 @@ const remainingFriendsFilePath = './json_files/remainingFriends.json';
 const cookiesFilePath = './json_files/cookies.json';
 
 try {
+  if (!process.env.PROFILE) throw new Error('')
+
+  if (!process.env.PROMO_URL) throw new Error('')
+
   if (!process.env.USER_NAME || !process.env.PASSWORD) {
     throw new Error('USERNAME or PASSWORD env variables missing')
   }
@@ -25,8 +29,8 @@ const password = process.env.PASSWORD
 const BATCH_NUMBER = Number(process.env.BATCH_NUMBER)
 
 const instagramUrl = 'https://www.instagram.com/'
-const profile = 'https://www.instagram.com/pablo_muro'
-const promoUrl = 'https://www.instagram.com/p/CKM9F4Zr2gP/'
+const profile = `${instagramUrl}${process.env.PROFILE}`
+const promoUrl = process.env.PROMO_URL
 
 const remainingFriends: any = JSON.parse(fs.readFileSync(remainingFriendsFilePath).toString())
 const cookiesString = fs.readFileSync(cookiesFilePath).toString().replace("\n", '');
