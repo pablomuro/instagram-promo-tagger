@@ -10,9 +10,9 @@ const remainingFriendsFilePath = './json_files/remainingFriends.json';
 const cookiesFilePath = './json_files/cookies.json';
 
 try {
-  if (!process.env.PROFILE) throw new Error('')
+  if (!process.env.PROFILE) throw new Error('Missing PROFILE')
 
-  if (!process.env.PROMO_URL) throw new Error('')
+  if (!process.env.PROMO_URL) throw new Error('Missing PromoUrl')
 
   if (!process.env.USER_NAME || !process.env.PASSWORD) {
     throw new Error('USERNAME or PASSWORD env variables missing')
