@@ -1,3 +1,4 @@
 node_modules/
 .env
 stuff.txt
+json_files/*
