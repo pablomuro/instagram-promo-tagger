@@ -10,6 +10,8 @@ const remainingFriendsFilePath = './json_files/remainingFriends.json';
 const cookiesFilePath = './json_files/cookies.json';
 
 try {
+  if (!process.env.PROFILE) throw new Error('Missing PROFILE')
+
   if (!process.env.USER_NAME || !process.env.PASSWORD) {
     throw new Error('USERNAME or PASSWORD env variables missing')
   }
@@ -25,7 +27,7 @@ const password = process.env.PASSWORD
 const BATCH_NUMBER = Number(process.env.BATCH_NUMBER)
 
 const instagramUrl = 'https://www.instagram.com/'
-const profile = 'https://www.instagram.com/pablo_muro'
+const profile = `${instagramUrl}${process.env.PROFILE}`
 
 const remainingFriends: any = JSON.parse(fs.readFileSync(remainingFriendsFilePath).toString())
 const cookiesString = fs.readFileSync(cookiesFilePath).toString().replace("\n", '');
