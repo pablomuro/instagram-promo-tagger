@@ -76,12 +76,14 @@ try {
         }
 
         const friend1 = remainingFriends.pop()
-        const friend2 = remainingFriends.pop()
-        await page.type('article form textarea', `@${friend1.profile} @${friend2.profile}`);
+        // const friend2 = remainingFriends.pop()
+        // await page.type('article form textarea', `@${friend1.profile} @${friend2.profile}`);
+        await page.type('article form textarea', `@${friend1.profile}`);
         await page.click('article form button[type=submit]');
 
         console.log('Remain: ', remainingFriends.length)
-        console.log(`post with:  @${friend1.profile} @${friend2.profile}\n`)
+        console.log(`post with:  @${friend1.profile}\n`)
+        // console.log(`post with:  @${friend1.profile} @${friend2.profile}\n`)
 
         batchNumber++
 
